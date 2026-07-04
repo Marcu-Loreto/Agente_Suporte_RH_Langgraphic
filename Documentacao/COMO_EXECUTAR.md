@@ -1,87 +1,105 @@
 # 🚀 Guia Rápido de Execução
 
-## ✅ Ambiente Pronto!
+Você pode executar o Assistente de RH de 3 formas. Em todas, ative o ambiente
+virtual primeiro:
 
-O ambiente virtual foi recriado com sucesso. Agora você pode executar o agente de 3 formas:
+```bash
+# Linux / macOS
+source .venv/bin/activate
+
+# Windows (PowerShell)
+.venv\Scripts\Activate.ps1
+```
 
 ---
 
-## 📌 Opção 1: LangGraph Studio (Recomendado)
+## 📌 Opção 1: Interface Web (Streamlit) — Recomendado
 
 ```bash
-# Ative o ambiente virtual
-.venv\Scripts\activate.ps1
+# Sobe o Streamlit em background (Linux/macOS)
+bash run_completo.sh
 
-# Inicie o LangGraph Studio
+# Para encerrar
+bash stop_services.sh
+```
+
+Ou diretamente:
+
+```bash
+streamlit run app_streamlit.py
+```
+
+Acesse: **http://localhost:8501**
+
+---
+
+## 📌 Opção 2: Modo Interativo / Testes (linha de comando)
+
+```bash
+python agent_rh_4_agentes.py
+```
+
+O script roda testes de exemplo e, em seguida, abre um modo interativo.
+Digite `sair` para encerrar.
+
+---
+
+## 📌 Opção 3: LangGraph Studio (debug visual do grafo)
+
+```bash
 langgraph dev
 ```
 
-Ou simplesmente execute:
-```bash
-start_langgraph.bat
-```
-
-Acesse: **http://localhost:8123**
+Acesse a interface de debug em **http://localhost:8123**.
 
 ---
 
-## 📌 Opção 2: Modo Interativo
+## ⚠️ IMPORTANTE: Configurar a API Key
 
-```bash
-# Ative o ambiente virtual
-.venv\Scripts\activate.ps1
-
-# Execute o agente
-python run_agent.py
-```
-
-Ou simplesmente execute:
-```bash
-run_agent.bat
-```
-
----
-
-## 📌 Opção 3: Consulta Única
-
-```bash
-.venv\Scripts\activate.ps1
-python run_agent.py "Sua pergunta aqui"
-```
-
----
-
-## ⚠️ IMPORTANTE: Atualizar API Key
-
-Antes de executar, atualize a chave da API OpenAI no arquivo `.env`:
-
-1. Acesse: https://platform.openai.com/account/api-keys
-2. Gere uma nova chave
-3. Edite `.env` e substitua:
+O sistema usa o **OpenRouter** para LLMs e embeddings. No arquivo `.env`:
 
 ```env
-OPENAI_API_KEY=sk-proj-SUA_NOVA_CHAVE_AQUI
+OPENROUTER_API_KEY=sk-or-v1-SUA_CHAVE_AQUI
+
+# Recomendado: modelos com prefixo de provedor
+LLM_SIMPLE_MODEL=openai/gpt-4o-mini
+LLM_MEDIUM_MODEL=openai/gpt-4o-mini
+LLM_COMPLEX_MODEL=openai/gpt-4o
 ```
+
+Gere sua chave em: https://openrouter.ai/keys
+
+> Rodando no Replit? Não use `.env`: configure `OPENROUTER_API_KEY` em
+> **Tools → Secrets**. Veja `Documentacao/REPLICACAO_REPLIT.md`.
 
 ---
 
-## 🧪 Exemplos de Teste
+## 🧪 Exemplos de Perguntas
 
 **Saudação:**
+
 ```
 Olá, bom dia!
 ```
 
-**Problema Técnico:**
+**Benefícios:**
+
 ```
-Não consigo fazer login no sistema
+Como funciona o vale-refeição?
 ```
 
-**Problema Financeiro:**
+**Férias:**
+
 ```
-Qual é o valor da minha fatura?
+Quantos dias de férias eu tenho?
+```
+
+**Segurança do Trabalho:**
+
+```
+Sofri um acidente no trabalho, o que devo fazer?
 ```
 
 ---
 
-**✨ Tudo instalado e pronto para usar!**
+**✨ Tudo pronto para usar!**

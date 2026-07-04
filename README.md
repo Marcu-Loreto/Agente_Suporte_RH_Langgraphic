@@ -1,7 +1,7 @@
 # 🤖 Sistema de Atendimento RH com Multi-Agentes e RAG
 
 #Rodar completo = bash run_completo.sh
-#Para tudo = bash stop_services.sh 
+#Para tudo = bash stop_services.sh
 #Se um dia precisar do LangGraph Studio para debug visual do grafo, roda langgraph dev em terminal separado quando #precisar.
 
 [![Python Version](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
@@ -228,8 +228,10 @@ Agente_Suporte_RH_Langgraphic/
 ├── 📁 .venv/                      # Ambiente virtual (não versionado)
 ├── 📁 __pycache__/                # Cache Python (não versionado)
 │
-├── 📄 run_streamlit.bat           # Script para executar Streamlit (Windows)
-├── 📄 run_agent.bat               # Script para executar agente (Windows)
+├── 📄 run_completo.sh             # Sobe o Streamlit (Linux/macOS)
+├── 📄 run_completo.bat            # Sobe o Streamlit (Windows)
+├── 📄 stop_services.sh            # Encerra os serviços
+├── 📄 .replit / replit.nix        # Configuração para rodar no Replit
 ├── 📄 langgraph.json              # Configuração LangGraph Studio
 ├── 📄 pyproject.toml              # Configuração do projeto
 │
