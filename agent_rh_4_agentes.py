@@ -358,15 +358,37 @@ if len(all_documents) == 0:
 
 print("\n🔄 Criando vector store...")
 
-# Embeddings para converter texto em vetores
-embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+# ============================================================================
+# OPENROUTER CONFIGURATION
+# ============================================================================
+openrouter_api_key = os.getenv("OPENROUTER_API_KEY")
+if not openrouter_api_key:
+    print("❌ ERRO: OPENROUTER_API_KEY não configurada no .env")
+    exit(1)
 
-vectorstore = Chroma.from_documents(
-    documents=all_documents,
-    embedding=embeddings,
-    collection_name="rh_knowledge_base",
-    # persist_directory="./chroma_db_rh"  # Descomente para persistir em disco
+# Embeddings para converter texto em vetores via OpenRouter
+embeddings = OpenAIEmbeddings(
+    model="text-embedding-3-small",
+    api_key=openrouter_api_key,
+    base_url="https://openrouter.ai/api/v1"
 )
+
+try:
+    vectorstore = Chroma.from_documents(
+        documents=all_documents,
+        embedding=embeddings,
+        collection_name="rh_knowledge_base",
+        # persist_directory="./chroma_db_rh"  # Descomente para persistir em disco
+    )
+except Exception as e:
+    # Falha comum: OPENROUTER_API_KEY inválida/expirada ou indisponibilidade da
+    # API de embeddings. Levantamos um erro claro para evitar um traceback
+    # gigante da SDK que impedia o Streamlit de abrir.
+    raise RuntimeError(
+        "Falha ao criar o vector store (embeddings via OpenRouter). "
+        "Verifique se OPENROUTER_API_KEY no .env é válida e se há conexão de rede. "
+        f"Detalhe original: {e}"
+    ) from e
 
 # Criar retriever
 retriever = vectorstore.as_retriever(
@@ -403,64 +425,42 @@ class State(TypedDict):
 # a chave/endpoint do provedor preferido não esteja configurado.
 
 def _build_llm(level: str) -> ChatOpenAI:
-    """Cria uma instância de LLM para o nível de complexidade indicado."""
+    """Cria uma instância de LLM para o nível de complexidade indicado via OpenRouter."""
     cfg = {
         "simple": {
             "model_env": "LLM_SIMPLE_MODEL",
-            "default_model": "minimax-m2.5",
-            "provider": os.getenv("LLM_SIMPLE_PROVIDER", "minimax").lower(),
+            "default_model": "gpt-3.5-turbo",
             "temperature": 0.0,
             "max_tokens": 300,
-            "fallback_model": "gpt-4o-mini",
         },
         "medium": {
             "model_env": "LLM_MEDIUM_MODEL",
-            "default_model": "gpt-5.4-nano",
-            "provider": os.getenv("LLM_MEDIUM_PROVIDER", "openai").lower(),
+            "default_model": "gpt-4-turbo",
             "temperature": 0.3,
             "max_tokens": 250,
-            "fallback_model": "gpt-4o-mini",
         },
         "complex": {
             "model_env": "LLM_COMPLEX_MODEL",
-            "default_model": "gpt-4o-mini",
-            "provider": os.getenv("LLM_COMPLEX_PROVIDER", "openai").lower(),
+            "default_model": "gpt-4o",
             "temperature": 0.0,
             "max_tokens": 500,
-            "fallback_model": "gpt-4o-mini",
         },
     }[level]
 
     model_name = os.getenv(cfg["model_env"], cfg["default_model"])
-    provider = cfg["provider"]
-
-    # MiniMax expõe API compatível com OpenAI; basta apontar base_url + api_key próprios.
-    if provider == "minimax":
-        api_key = os.getenv("MINIMAX_API_KEY")
-        base_url = os.getenv("MINIMAX_BASE_URL", "https://api.minimaxi.chat/v1")
-        if not api_key:
-            print(
-                f"⚠️  MINIMAX_API_KEY não configurada — fallback para "
-                f"OpenAI/{cfg['fallback_model']} no nível '{level}'"
-            )
-            return ChatOpenAI(
-                model=cfg["fallback_model"],
-                temperature=cfg["temperature"],
-                max_tokens=cfg["max_tokens"],
-            )
-        return ChatOpenAI(
-            model=model_name,
-            temperature=cfg["temperature"],
-            max_tokens=cfg["max_tokens"],
-            api_key=api_key,
-            base_url=base_url,
-        )
-
-    # Provedor padrão: OpenAI
+    openrouter_key = os.getenv("OPENROUTER_API_KEY")
+    
+    if not openrouter_key:
+        print(f"❌ ERRO: OPENROUTER_API_KEY não configurada para nível '{level}'")
+        exit(1)
+    
+    # Usar OpenRouter com base_url compatível com OpenAI
     return ChatOpenAI(
         model=model_name,
         temperature=cfg["temperature"],
         max_tokens=cfg["max_tokens"],
+        api_key=openrouter_key,
+        base_url="https://openrouter.ai/api/v1",
     )
 
 

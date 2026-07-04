@@ -1,6 +1,8 @@
 # 🤖 Sistema de Atendimento RH com Multi-Agentes e RAG
 
 #Rodar completo = bash run_completo.sh
+#Para tudo = bash stop_services.sh 
+#Se um dia precisar do LangGraph Studio para debug visual do grafo, roda langgraph dev em terminal separado quando #precisar.
 
 [![Python Version](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 [![LangGraph](https://img.shields.io/badge/LangGraph-0.2.0%2B-green.svg)](https://langchain-ai.github.io/langgraph/)

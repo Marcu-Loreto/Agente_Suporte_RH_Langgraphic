@@ -1274,11 +1274,11 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "chromadb" },
-    { name = "langchain", specifier = ">=1.3.2" },
+    { name = "langchain" },
     { name = "langchain-chroma" },
     { name = "langchain-community" },
     { name = "langchain-openai" },
-    { name = "langfuse", specifier = ">=4.7.1" },
+    { name = "langfuse" },
     { name = "langgraph" },
     { name = "langgraph-cli", extras = ["inmem"] },
     { name = "pydantic" },

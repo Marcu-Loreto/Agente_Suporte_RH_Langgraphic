@@ -1,0 +1,26 @@
+# Configuração do Replit — Assistente Virtual de RH
+# Docs: https://docs.replit.com/programming-ide/configuring-repl
+
+entrypoint = "app_streamlit.py"
+modules = ["python-3.11"]
+
+# Comando executado ao clicar em "Run".
+# Streamlit precisa escutar em 0.0.0.0 e numa porta exposta pelo Replit.
+run = "streamlit run app_streamlit.py --server.port 8080 --server.address 0.0.0.0 --server.headless true --server.enableCORS false --server.enableXsrfProtection false"
+
+[nix]
+channel = "stable-24_05"
+
+[env]
+PYTHONUNBUFFERED = "1"
+# As chaves reais (OPENROUTER_API_KEY etc.) devem ser definidas em
+# Tools → Secrets, NUNCA neste arquivo (que é versionado).
+
+# Mapeamento de portas: a porta interna 8080 do Streamlit é publicada na web.
+[[ports]]
+localPort = 8080
+externalPort = 80
+
+[deployment]
+run = ["sh", "-c", "streamlit run app_streamlit.py --server.port 8080 --server.address 0.0.0.0 --server.headless true --server.enableCORS false --server.enableXsrfProtection false"]
+deploymentTarget = "cloudrun"

@@ -12,6 +12,7 @@ from agent_rh_4_agentes import (
     get_contextual_greeting,
     get_formatted_time,
     get_run_config,
+    all_documents,
 )
 import time
 
@@ -222,7 +223,7 @@ with st.sidebar:
     
     st.markdown("---")
     st.markdown("### 📚 Base de Conhecimento")
-    st.info("8 documentos carregados")
+    st.info(f"{len(all_documents)} documentos carregados")
 
 # ============================================================================
 # ÁREA DE CHAT

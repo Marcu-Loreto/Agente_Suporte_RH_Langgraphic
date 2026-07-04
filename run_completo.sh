@@ -21,9 +21,9 @@ mkdir -p logs
 # Ativar ambiente virtual
 source .venv/bin/activate
 
-# Iniciar Streamlit em background — usa o binário do venv explicitamente
+# Iniciar Streamlit em background — usa o módulo python para evitar problemas de shebang/path
 echo "📱 Iniciando Streamlit..."
-.venv/bin/streamlit run app_streamlit.py > logs/streamlit.log 2>&1 &
+./.venv/bin/python -m streamlit run app_streamlit.py > logs/streamlit.log 2>&1 &
 STREAMLIT_PID=$!
 echo $STREAMLIT_PID > logs/streamlit.pid
 
