@@ -29,6 +29,10 @@ logs/
 *.swp
 .DS_Store
 
+# Metadados da IDE Kiro (specs/skills locais — não fazem parte da aplicação)
+.kiro/
+.agentes/
+
 # Scripts experimentais (não versionar)
 _*.py
 old/
